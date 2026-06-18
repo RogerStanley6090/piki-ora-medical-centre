@@ -1,3 +1,13 @@
+/**
+ * Axios API client for Piki Ora Medical Centre.
+ *
+ * - baseURL switches automatically between local dev (localhost:8000)
+ *   and production (Render) via the VITE_API_URL environment variable.
+ * - Request interceptor: reads the DRF token from localStorage and
+ *   attaches it as an Authorization header on every outgoing request.
+ * - Response interceptor: if the server returns 401 (token expired or
+ *   invalid), clears localStorage and redirects to /login automatically.
+ */
 import axios from 'axios'
 
 const api = axios.create({
@@ -13,7 +23,7 @@ api.interceptors.request.use((config) => {
   return config
 })
 
-// Redirect to login on 401 Unauthorized
+// Redirect to login on 401 Unauthorized (expired or invalid token)
 api.interceptors.response.use(
   (response) => response,
   (error) => {
