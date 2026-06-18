@@ -1,0 +1,35 @@
+# Python / Django
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.env
+*.sqlite3
+venv/
+env/
+.venv/
+staticfiles/
+
+# Node / React
+node_modules/
+dist/
+.DS_Store
+*.local
+.env.local
+.env.*.local
+
+# VS Code
+.vscode/
+*.swp
+*.swo
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
