@@ -37,3 +37,4 @@ dist/
 # Local scripts (not part of the submission codebase)
 rewrite_commits.sh
 Task1_Reflection_Report.docx
+piki-ora-frontend/
