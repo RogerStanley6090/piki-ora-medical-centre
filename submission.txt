@@ -1,0 +1,41 @@
+ISCG7420 Web Application Development — Assignment 2
+Student: Roger Stanley
+GitHub Username: RogerStanley6090
+
+========================================
+GITHUB REPOSITORIES
+========================================
+
+GitHub Repository (Django REST Framework — backend):
+https://github.com/RogerStanley6090/piki-ora-medical-centre/tree/main/backend
+
+GitHub Repository (React JS — frontend):
+https://github.com/RogerStanley6090/piki-ora-medical-centre-frontend
+
+========================================
+DEPLOYMENT URLS
+========================================
+
+Backend (Django REST Framework) — deployed on Render:
+https://piki-ora-medical-centre.onrender.com/api/
+
+Frontend (React JS) — deployed on Vercel:
+https://piki-ora-medical-centre-frontend.vercel.app
+
+========================================
+DEFAULT ADMIN LOGIN CREDENTIALS
+========================================
+
+Username: admin
+Password: Admin123!
+
+========================================
+NOTES
+========================================
+
+- The Django REST Framework backend is hosted on Render.com (not Vercel),
+  as Render supports Python/Django WSGI applications with gunicorn.
+- The React frontend is hosted on Vercel as a static Create React App build.
+- The database is PostgreSQL hosted on Neon (serverless).
+- To seed the database with the default admin + doctors + slots, run:
+    python manage.py seed_admin

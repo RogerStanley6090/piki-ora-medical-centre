@@ -1,0 +1,392 @@
+{
+  "info": {
+    "name": "Piki Ora Medical Centre API",
+    "description": "API collection for the Piki Ora Medical Centre appointment booking system. Base URL: https://piki-ora-medical-centre.onrender.com/api/",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://piki-ora-medical-centre.onrender.com/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string",
+      "description": "Set this after login"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register Patient",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testpatient\",\n  \"email\": \"patient@example.com\",\n  \"first_name\": \"Test\",\n  \"last_name\": \"Patient\",\n  \"phone\": \"0211234567\",\n  \"password\": \"password123\",\n  \"password2\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register/",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register", ""]
+            },
+            "description": "Register a new patient account. Role is automatically set to PATIENT."
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.token) {",
+                  "  pm.collectionVariables.set('token', json.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"Admin123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login/",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login", ""]
+            },
+            "description": "Login with username and password. Returns a DRF token. The test script automatically saves the token to the collection variable."
+          }
+        },
+        {
+          "name": "Get Current User (me)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Token {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/me/",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "me", ""]
+            },
+            "description": "Returns the currently authenticated user's profile including role."
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Token {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/logout/",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "logout", ""]
+            },
+            "description": "Invalidates the current auth token."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Doctors",
+      "item": [
+        {
+          "name": "List All Doctors",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Token {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/doctors/",
+              "host": ["{{base_url}}"],
+              "path": ["doctors", ""]
+            },
+            "description": "Returns all doctors with their slot counts. Requires authentication."
+          }
+        },
+        {
+          "name": "Get Doctor Detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Token {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/doctors/1/",
+              "host": ["{{base_url}}"],
+              "path": ["doctors", "1", ""]
+            },
+            "description": "Returns a single doctor by ID."
+          }
+        },
+        {
+          "name": "Create Doctor (Admin only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Token {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dr. Jane Smith\",\n  \"specialization\": \"Cardiology\",\n  \"email\": \"j.smith@pikioramc.nz\",\n  \"phone\": \"093456789\",\n  \"bio\": \"Specialist in cardiovascular medicine with 10 years experience.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/doctors/",
+              "host": ["{{base_url}}"],
+              "path": ["doctors", ""]
+            },
+            "description": "Create a new doctor. Requires admin role."
+          }
+        },
+        {
+          "name": "Update Doctor (Admin only)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Token {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dr. Jane Smith\",\n  \"specialization\": \"Cardiology\",\n  \"email\": \"j.smith@pikioramc.nz\",\n  \"phone\": \"093456789\",\n  \"bio\": \"Updated bio text.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/doctors/1/",
+              "host": ["{{base_url}}"],
+              "path": ["doctors", "1", ""]
+            },
+            "description": "Update a doctor by ID. Requires admin role."
+          }
+        },
+        {
+          "name": "Delete Doctor (Admin only)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Token {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/doctors/1/",
+              "host": ["{{base_url}}"],
+              "path": ["doctors", "1", ""]
+            },
+            "description": "Delete a doctor by ID. Requires admin role."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Appointment Slots",
+      "item": [
+        {
+          "name": "List All Slots",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Token {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/slots/",
+              "host": ["{{base_url}}"],
+              "path": ["slots", ""]
+            },
+            "description": "Returns all appointment slots with doctor info. Requires authentication."
+          }
+        },
+        {
+          "name": "Create Slot (Admin only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Token {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"doctor\": 1,\n  \"date\": \"2026-07-01\",\n  \"start_time\": \"09:00:00\",\n  \"end_time\": \"09:30:00\",\n  \"is_available\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/slots/",
+              "host": ["{{base_url}}"],
+              "path": ["slots", ""]
+            },
+            "description": "Create a new appointment slot. Requires admin role."
+          }
+        },
+        {
+          "name": "Get Slot Detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Token {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/slots/1/",
+              "host": ["{{base_url}}"],
+              "path": ["slots", "1", ""]
+            }
+          }
+        },
+        {
+          "name": "Delete Slot (Admin only)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Token {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/slots/1/",
+              "host": ["{{base_url}}"],
+              "path": ["slots", "1", ""]
+            },
+            "description": "Delete an appointment slot. Requires admin role."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Appointments",
+      "item": [
+        {
+          "name": "List My Appointments (Patient)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Token {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/appointments/",
+              "host": ["{{base_url}}"],
+              "path": ["appointments", ""]
+            },
+            "description": "Patients see their own appointments. Admins see all appointments."
+          }
+        },
+        {
+          "name": "Book Appointment (Patient)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Token {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"slot\": 1,\n  \"reason\": \"Annual check-up\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/appointments/",
+              "host": ["{{base_url}}"],
+              "path": ["appointments", ""]
+            },
+            "description": "Book an available slot. Patient is set automatically from the auth token."
+          }
+        },
+        {
+          "name": "Get Appointment Detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Token {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/appointments/1/",
+              "host": ["{{base_url}}"],
+              "path": ["appointments", "1", ""]
+            }
+          }
+        },
+        {
+          "name": "Cancel Appointment",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Token {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"CANCELLED\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/appointments/1/",
+              "host": ["{{base_url}}"],
+              "path": ["appointments", "1", ""]
+            },
+            "description": "Cancel an appointment. The slot is restored to available automatically."
+          }
+        },
+        {
+          "name": "Delete Appointment (Admin only)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Token {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/appointments/1/",
+              "host": ["{{base_url}}"],
+              "path": ["appointments", "1", ""]
+            },
+            "description": "Hard delete an appointment. Requires admin role."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Patients (Admin only)",
+      "item": [
+        {
+          "name": "List All Patients",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Token {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/patients/",
+              "host": ["{{base_url}}"],
+              "path": ["patients", ""]
+            },
+            "description": "Returns all patient accounts. Requires admin role."
+          }
+        },
+        {
+          "name": "Delete Patient (Admin only)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Token {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/patients/1/",
+              "host": ["{{base_url}}"],
+              "path": ["patients", "1", ""]
+            },
+            "description": "Delete a patient account. Requires admin role."
+          }
+        }
+      ]
+    }
+  ]
+}
